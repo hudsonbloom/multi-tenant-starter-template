@@ -2,7 +2,7 @@
 
 import SidebarLayout, { SidebarItem } from "@/components/sidebar-layout";
 import { SelectedTeamSwitcher, useUser } from "@stackframe/stack";
-import { BadgePercent, BarChart4, Columns3, Globe, Locate, Settings2, ShoppingBag, ShoppingCart, Users } from "lucide-react";
+import { BadgePercent, BarChart4, Columns3, Globe, Locate, Settings2, ShoppingBag, ShoppingCart, Users, FolderKanban, Search, Inbox, ListTodo, UsersRound } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 const navigationItems: SidebarItem[] = [
@@ -17,49 +17,42 @@ const navigationItems: SidebarItem[] = [
     name: 'Management',
   },
   {
-    name: "Products",
-    href: "/products",
-    icon: ShoppingBag,
+    name: "Search",
+    icon: Search,
+    type: "search",
+  },
+  {
+    name: "Inbox",
+    href: "/inbox",
+    icon: Inbox,
     type: "item",
   },
   {
-    name: "People",
-    href: "/people",
-    icon: Users,
+    name: "To Do",
+    href: "/todo",
+    icon: ListTodo,
     type: "item",
   },
   {
-    name: "Segments",
-    href: "/segments",
-    icon: Columns3,
-    type: "item",
-  },
-  {
-    name: "Regions",
-    href: "/regions",
-    icon: Locate,
+    name: "Contacts",
+    href: "/contacts",
+    icon: UsersRound,
     type: "item",
   },
   {
     type: 'label',
-    name: 'Monetization',
+    name: 'Projects',
   },
   {
-    name: "Revenue",
-    href: "/revenue",
-    icon: BarChart4,
+    name: "CSU FYE 2.0",
+    href: "/project/123",
+    icon: FolderKanban,
     type: "item",
   },
   {
-    name: "Orders",
+    name: "W21 Blue Credit Union",
     href: "/orders",
-    icon: ShoppingCart,
-    type: "item",
-  },
-  {
-    name: "Discounts",
-    href: "/discounts",
-    icon: BadgePercent,
+    icon: FolderKanban,
     type: "item",
   },
   {
