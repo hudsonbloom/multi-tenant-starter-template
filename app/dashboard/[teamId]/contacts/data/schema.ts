@@ -4,7 +4,8 @@ import { z } from "zod"
 // IRL, you will have a schema for your data models.
 export const contactSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
   email: z.string(),
   phone: z.string(),
   roles: z.array(z.number()),
@@ -19,6 +20,8 @@ export const contactSchema = z.object({
   country: z.string(),
   zipcode: z.string(),
   type: z.string(),
+  company: z.string(),
+  website: z.string(),
 })
 
 export type Contact = z.infer<typeof contactSchema>

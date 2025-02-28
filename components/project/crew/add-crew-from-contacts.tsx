@@ -43,7 +43,7 @@ type Contact = {
 
 export function AddCrewFromContactsButton() {
   const { contacts, addCrewMember, crew } = useProject();
-  const [selectedCrew, setSelectedCrew] = useState<string | null>(null);
+  const [selectedCrewID, setSelectedCrewID] = useState<string | null>(null);
   const [customCrew, setCustomCrew] = useState({
     name: "",
     role_id: "",
@@ -71,8 +71,9 @@ export function AddCrewFromContactsButton() {
   );
 
   const handleAddCrew = () => {
-    if (selectedCrew) {
-      addCrewMember("from-contact", selectedCrew);
+
+    if (selectedCrewID) {
+      addCrewMember("from-contact", selectedCrewID);
       setCustomCrew({
         name: "",
         role_id: "",
@@ -114,7 +115,7 @@ export function AddCrewFromContactsButton() {
           <div className="grid grid-cols-3 items-center gap-4">
               <p className="text-sm font-medium mb-2">Add from contacts</p>
               <div className="col-span-2">
-              <Select onValueChange={(e) => setSelectedCrew(e)}>
+              <Select onValueChange={(e) => setSelectedCrewID(e)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select crew" />
                 </SelectTrigger>

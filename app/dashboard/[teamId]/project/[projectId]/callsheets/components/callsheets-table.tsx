@@ -91,7 +91,7 @@ export const columns: ColumnDef<Callsheet>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => (
-      <Link href={window.location.pathname + "/callsheet/123"}>
+      <Link href={window.location.pathname + "/123"}>
         {row.getValue("name")}
       </Link>
     ),

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createSupabaseClient } from "@/utils/supabase-client";
+import { formatPhoneNumber } from "@/lib/utils";
 
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,18 +19,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Building2, User, Mail, Phone } from "lucide-react";
 
 import AllRoles from "@/lib/roles";
-import { useProject } from "@/context/ProjectProvider";
+import { useContacts } from "@/context/ContactsProvider";
 
 export function DetailsSheet({ crew }: { crew: any }) {
     const { toast } = useToast();
@@ -37,7 +30,7 @@ export function DetailsSheet({ crew }: { crew: any }) {
   const [data, setData] = useState(crew);
 //   const { updateContactCrewDetails } = useProject();
 
-console.log('data', data)
+  const { updateContactDetails } = useContacts();
 
   const rolesByDepartment = AllRoles.reduce((acc: any, role) => {
     const department = role.department;
@@ -49,63 +42,36 @@ console.log('data', data)
   }, {});
 
 
-  // Update Contact & Crew Details
-  const updateContactCrewDetails = async () => {
-    const { error: contact_error } = await supabase
-    .from("contacts")
-    .update({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-    })
-    .eq("id", data.id);
-
-  const { error: crew_list_error } = await supabase
-    .from("project_crew_list")
-    .update({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-    })
-    .eq("contact_id", data.contact_id);
-
-  if (contact_error || crew_list_error) {
-    console.error("Error updating crew details:", contact_error);
-  } else {
-    console.log("Crew details updated successfully");
-    // setCrew((prevCrew) =>
-    //   prevCrew.map((member) =>
-    //     member.contact_id === data.contact_id
-    //       ? { ...member, name: data.name, email: data.email, phone: data.phone }
-    //       : member
-    //   )
-    // );
-    // setContacts((prevContacts) =>
-    //   prevContacts.map((contact) =>
-    //     contact.id === data.contact_id
-    //       ? { ...contact, name: data.name, email: data.email, phone: data.phone }
-    //       : contact
-    //   )
-    // );
-    toast({
-      description: "Contact details updated successfully.",
-    });
-  }
-    }
-
     const handleSaveChanges = async () => {
-        updateContactCrewDetails();
+      updateContactDetails(data);
+      };
+
+      const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+        setData({ ...data, phone: formattedPhoneNumber });
       };
 
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <p className="hover:underline cursor-pointer">{crew.name}</p>
+       <div className=" flex items-center">
+       <p className="hover:underline cursor-pointer">
+          {crew.first_name} {crew.last_name}
+          </p>
+          {crew.pronouns && <span className="text-[11px] font-normal ml-2">({crew.pronouns})</span>}
+       </div>
       </SheetTrigger>
       <SheetContent className="min-w-[500px]">
         <SheetHeader>
-          <SheetTitle>{crew.name}</SheetTitle>
+          <SheetTitle>
+          <Input
+              id="name"
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+              value={data.name}
+              className="col-span-3 border-0 shadow-none p-0 text-xl font-bold hover:border cursor-pointer"
+            />
+          </SheetTitle>
           <SheetDescription>
             Make changes to your profile here. Click save when you're done.
           </SheetDescription>
@@ -113,7 +79,7 @@ console.log('data', data)
         <div className="grid gap-4 py-4">
 
 
-          <div className="grid grid-cols-4 items-center gap-4">
+          {/* <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-left">
               Name
             </Label>
@@ -123,9 +89,41 @@ console.log('data', data)
               value={data.name}
               className="col-span-3"
             />
+          </div> */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-left flex items-center">
+            <Building2 size={18} className="mr-2" />
+              Company
+            </Label>
+            <Input
+              id="email"
+              onChange={(e) => setData({ ...data, company: e.target.value })}
+              value={data.company}
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-left">
+            <Label htmlFor="username" className="text-left flex items-center">
+            <User size={18} className="mr-2" />
+              Role
+            </Label>
+            <div className="col-span-3">
+              <select className="border shadow-sm p-2 rounded-sm text-sm w-full" value={data.roles[0]} onChange={(e)=> setData({ ...data, roles: [Number(e.target.value)]})}>
+                {Object.keys(rolesByDepartment).map((department) => (
+                  <optgroup key={department} label={department + " Department"}>
+                    {rolesByDepartment[department].map((role: any) => (
+                      <option key={role.id} value={role.id}>
+                        {role.title}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-left flex items-center">
+            <Mail size={18} className="mr-2" />
               Email
             </Label>
             <Input
@@ -136,49 +134,18 @@ console.log('data', data)
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-left">
+            <Label htmlFor="username" className="text-left flex items-center">
+            <Phone size={18} className="mr-2" />
               Phone
             </Label>
             <Input
               id="phone"
-              onChange={(e) => setData({ ...data, phone: e.target.value })}
+              onChange={handlePhoneChange}
               value={data.phone}
               className="col-span-3"
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-left">
-              Role
-            </Label>
-            <div>
-              <Select>
-                <SelectTrigger className="w-[280px]">
-                  <SelectValue placeholder="Select a fruit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(rolesByDepartment).map((department: string) => {
-                    return (
-                      <SelectGroup key={department}>
-                        <SelectLabel>{department} Department</SelectLabel>
-                        {rolesByDepartment[department].map((role: any) => {
-                          return (
-                            <SelectItem key={role.id} value={role.id}>
-                              <div>
-                                <p>{role.title}</p>
-                                <p className="text-muted-foreground text-xs">
-                                  {role.department} Department
-                                </p>
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectGroup>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+         
         </div>
         <SheetFooter>
           <SheetClose asChild>

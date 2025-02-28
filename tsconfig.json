@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/dashboard/[teamId]/project/[projectId]/callsheet/[callsheetId]/components/editable-text.js", "context/ProjectProvider.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/dashboard/[teamId]/project/[projectId]/callsheets/[callsheetId]/components/editable-text.js", "context/ProjectProvider.js", "context/SidebarProvider.js"],
   "exclude": ["node_modules"]
 }

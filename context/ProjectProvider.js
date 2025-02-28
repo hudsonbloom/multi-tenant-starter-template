@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { useToast } from "@/hooks/use-toast";
 
+import { LoaderCircle } from "lucide-react";
+
 // Create a new context
 export const ProjectContext = createContext();
 
@@ -74,18 +76,26 @@ export const ProjectProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    setLoading(true);
     fetchProjectData();
     fetchCrewData();
     fetchContacts();
-    setLoading(false);
+
   }, []);
+
+  useEffect(() => {
+    if (project.title) {
+      setLoading(false);
+    }
+  }
+  , [project]);
 
 
   // Crew Database Changes
   const addCrewMember = async (type, crewData) => {
     let crewMember;
     if (type === "from-contact") {
-      crewMember = contacts.find((contact) => contact.id === crewData.id);
+      crewMember = contacts.find((contact) => contact.id === crewData);
     } else {
       crewMember = crewData;
     }
@@ -201,6 +211,7 @@ export const ProjectProvider = ({ children }) => {
     });
   }
     }
+
   
 
   return (
@@ -216,7 +227,15 @@ export const ProjectProvider = ({ children }) => {
         updateContactCrewDetails
       }}
     >
-      {loading ? <div>Loading...</div> : <div>{children}</div>}
+      {loading ? (
+        <div className="h-full w-full flex items-center justify-center">
+          <div className="flex items-center space-x-2">
+            <LoaderCircle size={40} className="animate-spin" />
+          <p className="font-bold">Getting the page ready</p>
+          </div>
+        </div>
+        
+        ) : <div>{children}</div>}
     </ProjectContext.Provider>
   );
 };

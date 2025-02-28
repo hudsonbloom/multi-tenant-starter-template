@@ -36,7 +36,7 @@ import {
       icon: HelpCircle,
     },
     {
-      value: "electric",
+      value: "Electric",
       label: "Electric",
       icon: Circle,
     },

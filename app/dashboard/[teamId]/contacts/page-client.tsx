@@ -5,6 +5,7 @@ import path from "path"
 import { Metadata } from "next"
 import Image from "next/image"
 import { z } from "zod"
+import ContactsProvider from "@/context/ContactsProvider";
 
 import { createSupabaseClient } from "@/utils/supabase-client";
 import { useUser } from "@stackframe/stack";
@@ -18,29 +19,12 @@ export default function ContactsPageClient() {
   const supabase = createSupabaseClient();
   const user = useUser();
   const team = user?.selectedTeam;
+  
 
-  const [contacts, setContacts] = useState<any[]>([]);
-
-  useEffect (() => {
-    getContacts()
-  }
-  , [])
-
-  const getContacts = async () => {
-    const { data: contacts, error } = await supabase
-      .from('contacts')
-      .select('*')
-      .eq('team_id', team?.id)
-
-    if (error) {
-      console.error("Error fetching contacts:", error);
-      return [];
-    }
-    setContacts(contacts);
-  }
 
   return (
     <>
+    <ContactsProvider>
       <div className="md:hidden">
         <Image
           src="/examples/tasks-light.png"
@@ -58,8 +42,9 @@ export default function ContactsPageClient() {
         />
       </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <DataTable data={contacts} columns={columns} />
+        <DataTable columns={columns} />
       </div>
+      </ContactsProvider>
     </>
   )
 }
